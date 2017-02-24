@@ -1,12 +1,19 @@
 package org.cchao.test;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
+
+import org.cchao.imagepreviewlib.ImageLoader;
+import org.cchao.imagepreviewlib.ImageLoaderListener;
 import org.cchao.imagepreviewlib.ImagePreViewActivity;
 
 import java.util.ArrayList;
+
+import uk.co.senab.photoview.PhotoView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,6 +21,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ImageLoader.init(new ImageLoaderListener() {
+            @Override
+            public void load(Context context, PhotoView photoView, String imageUrl) {
+                Glide.with(context)
+                        .load(imageUrl)
+                        .error(R.mipmap.ic_launcher)
+                        .placeholder(R.mipmap.ic_launcher)
+                        .into(photoView);
+            }
+        });
 
         findViewById(R.id.btn_image_preview).setOnClickListener(new View.OnClickListener() {
             @Override

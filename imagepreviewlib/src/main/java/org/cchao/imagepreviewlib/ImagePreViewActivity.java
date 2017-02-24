@@ -2,10 +2,12 @@ package org.cchao.imagepreviewlib;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class ImagePreViewActivity extends AppCompatActivity {
     private static final String EXTRA_IMAGE_INDEX = "image_index";
     private static final String EXTRA_IMAGE_URLS = "image_urls";
 
-    private ViewPager viewPager;
+    private HackyViewPager viewPager;
     private TextView textIndicator;
 
     //第几张图片
@@ -46,7 +48,12 @@ public class ImagePreViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
 
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //状态栏透明
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+
+        viewPager = (HackyViewPager) findViewById(R.id.viewPager);
         textIndicator = (TextView) findViewById(R.id.text_indicator);
 
         pagerPosition = getIntent().getIntExtra(EXTRA_IMAGE_INDEX, 0);
