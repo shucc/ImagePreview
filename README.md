@@ -21,7 +21,7 @@
 ```groovy
     dependencies {
         compile "com.android.support:appcompat-v7:latest.release.version"
-        compile ('com.github.shucc:ImagePreview:v1.0') {
+        compile ('com.github.shucc:ImagePreview:v1.1') {
             exclude group: 'com.android.support', module: 'appcompat-v7'
         }
     }
