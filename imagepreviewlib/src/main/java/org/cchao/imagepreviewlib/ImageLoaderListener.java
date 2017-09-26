@@ -1,6 +1,6 @@
 package org.cchao.imagepreviewlib;
 
-import android.content.Context;
+import android.support.v4.app.Fragment;
 
 import uk.co.senab.photoview.PhotoView;
 
@@ -10,5 +10,5 @@ import uk.co.senab.photoview.PhotoView;
  */
 public interface ImageLoaderListener {
 
-    void load(Context context, PhotoView photoView, String imageUrl);
+    void load(Fragment fragment, PhotoView photoView, String imageUrl);
 }

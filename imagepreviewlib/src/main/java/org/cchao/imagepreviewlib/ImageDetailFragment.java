@@ -42,7 +42,11 @@ public class ImageDetailFragment extends Fragment {
         photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
             public void onPhotoTap(View view, float x, float y) {
-                getActivity().finish();
+                if (photoView.getScale() > 1.0f) {
+                    photoView.setScale(1.0f, true);
+                } else {
+                    getActivity().finish();
+                }
             }
 
             @Override
@@ -57,7 +61,7 @@ public class ImageDetailFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (null != ImageLoader.getImageLoaderListener()) {
-            ImageLoader.getImageLoaderListener().load(getContext(), photoView, imageUrl);
+            ImageLoader.getImageLoaderListener().load(this, photoView, imageUrl);
         } else {
             throw new NullPointerException("ImageLoader not initialized!");
         }

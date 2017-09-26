@@ -1,9 +1,11 @@
 package org.cchao.test;
 
-import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
@@ -17,25 +19,34 @@ import uk.co.senab.photoview.PhotoView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String TAG = getClass().getName();
+
+    private ImageView imgOrigin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        imgOrigin = (ImageView) findViewById(R.id.img_origin);
+
+        Glide.with(this)
+                .load("http://img3.duitang.com/uploads/item/201606/04/20160604010014_Art48.thumb.224_0.jpeg")
+                .into(imgOrigin);
+
         ImageLoader.init(new ImageLoaderListener() {
             @Override
-            public void load(Context context, PhotoView photoView, String imageUrl) {
-                Glide.with(context)
+            public void load(Fragment fragment, PhotoView photoView, String imageUrl) {
+                Glide.with(fragment)
                         .load(imageUrl)
-                        .error(R.mipmap.ic_launcher)
-                        .placeholder(R.mipmap.ic_launcher)
                         .into(photoView);
             }
         });
 
-        findViewById(R.id.btn_image_preview).setOnClickListener(new View.OnClickListener() {
+        imgOrigin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d(TAG, "onClick: " + imgOrigin.getMeasuredWidth() + "-->" + imgOrigin.getMeasuredHeight() + "-->" + imgOrigin.getPivotX() + "-->" + imgOrigin.getPivotY());
                 ArrayList<String> imageList = new ArrayList<>();
                 imageList.add("http://img3.duitang.com/uploads/item/201606/04/20160604010014_Art48.thumb.224_0.jpeg");
                 imageList.add("http://imgsrc.baidu.com/forum/w=580/sign=a3d6766038292df597c3ac1d8c305ce2/20e941c2d5628535d2e5616e92ef76c6a6ef63b5.jpg");

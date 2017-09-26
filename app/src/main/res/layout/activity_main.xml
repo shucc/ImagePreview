@@ -3,14 +3,15 @@
     android:id="@+id/activity_main"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:gravity="center">
 
-    <Button
-        android:id="@+id/btn_image_preview"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:text="多图浏览"/>
+    <ImageView
+        android:id="@+id/img_origin"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"/>
 
 </LinearLayout>
