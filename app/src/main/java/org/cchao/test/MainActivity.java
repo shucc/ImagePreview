@@ -1,11 +1,17 @@
 package org.cchao.test;
 
+import android.annotation.TargetApi;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.SharedElementCallback;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
@@ -16,6 +22,7 @@ import org.cchao.imagepreviewlib.ImagePreViewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import uk.co.senab.photoview.PhotoView;
 
@@ -26,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rvImage;
 
     private List<String> data;
+
+    private int enterPosition;
+    private int exitPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +68,43 @@ public class MainActivity extends AppCompatActivity {
         imageAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                ImagePreViewActivity.launch(MainActivity.this, position, (ArrayList) data);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Pair<View, String> pair = Pair.create(view, view.getTransitionName());
+                    ImagePreViewActivity.launch(MainActivity.this, position, (ArrayList) data, pair);
+                    enterPosition = position;
+                    setSharedElementCallback();
+                } else {
+                    ImagePreViewActivity.launch(MainActivity.this, position, (ArrayList) data);
+                }
             }
         });
+    }
+
+    @TargetApi(21)
+    private void setSharedElementCallback() {
+        setExitSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                Log.d(TAG, "onMapSharedElements: ");
+                if (exitPosition != enterPosition) {
+                    View view = rvImage.findViewWithTag(exitPosition);
+                    names.clear();
+                    sharedElements.clear();
+                    names.add(view.getTransitionName());
+                    sharedElements.put(view.getTransitionName(), view);
+                }
+                setExitSharedElementCallback((SharedElementCallback) null);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityReenter(int resultCode, Intent data) {
+        Log.d(TAG, "onActivityReenter: ");
+        super.onActivityReenter(resultCode, data);
+        if (resultCode == RESULT_OK && null != data) {
+            exitPosition = data.getIntExtra(ImagePreViewActivity.EXIT_POSITION, 0);
+            Log.d(TAG, "onActivityResult: " + exitPosition);
+        }
     }
 }

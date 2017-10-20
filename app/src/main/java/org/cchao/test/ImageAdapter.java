@@ -1,6 +1,7 @@
 package org.cchao.test;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +53,10 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
         Glide.with(context)
                 .load(data.get(position))
                 .into(holder.imgDetail);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            holder.imgDetail.setTransitionName(context.getString(R.string.image_preview_transition_name, position));
+            holder.imgDetail.setTag(position);
+        }
     }
 
     @Override

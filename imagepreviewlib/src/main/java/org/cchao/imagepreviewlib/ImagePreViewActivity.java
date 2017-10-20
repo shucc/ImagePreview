@@ -1,11 +1,18 @@
 package org.cchao.imagepreviewlib;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.SharedElementCallback;
+import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -14,6 +21,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by shucc on 17/2/23.
@@ -24,20 +33,33 @@ public class ImagePreViewActivity extends AppCompatActivity {
     private static final String STATE_POSITION = "STATE_POSITION";
     private static final String EXTRA_IMAGE_INDEX = "image_index";
     private static final String EXTRA_IMAGE_URLS = "image_urls";
+    public static final String EXIT_POSITION = "exit_position";
 
     private HackyViewPager viewPager;
     private TextView textIndicator;
 
     //第几张图片
-    private int pagerPosition;
+    private int initPosition;
     //图片地址
     private ArrayList<String> urls = new ArrayList<>();
 
-    public static void launch(Activity context, int pagerPosition, ArrayList<String> urls) {
+    public static void launch(Activity context, int initPosition, ArrayList<String> urls) {
         Intent intent = new Intent(context, ImagePreViewActivity.class);
-        intent.putExtra(EXTRA_IMAGE_INDEX, pagerPosition);
+        intent.putExtra(EXTRA_IMAGE_INDEX, initPosition);
         intent.putStringArrayListExtra(EXTRA_IMAGE_URLS, urls);
         context.startActivity(intent);
+    }
+
+    public static void launch(Activity context, int initPosition, ArrayList<String> urls, Pair<View, String> pair) {
+        Intent intent = new Intent(context, ImagePreViewActivity.class);
+        intent.putExtra(EXTRA_IMAGE_INDEX, initPosition);
+        intent.putStringArrayListExtra(EXTRA_IMAGE_URLS, urls);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(context, pair);
+            context.startActivityForResult(intent, 0, optionsCompat.toBundle());
+        } else {
+            context.startActivity(intent);
+        }
     }
 
     @Override
@@ -48,6 +70,9 @@ public class ImagePreViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ActivityCompat.postponeEnterTransition(this);
+        }
         setContentView(R.layout.activity_image_preview);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -64,16 +89,27 @@ public class ImagePreViewActivity extends AppCompatActivity {
         viewPager = (HackyViewPager) findViewById(R.id.viewPager);
         textIndicator = (TextView) findViewById(R.id.text_indicator);
 
-        pagerPosition = getIntent().getIntExtra(EXTRA_IMAGE_INDEX, 0);
-        urls = getIntent().getStringArrayListExtra(EXTRA_IMAGE_URLS);
+        final Intent intent = getIntent();
+        initPosition = intent.getIntExtra(EXTRA_IMAGE_INDEX, 0);
+        urls = intent.getStringArrayListExtra(EXTRA_IMAGE_URLS);
         if (savedInstanceState != null) {
-            pagerPosition = savedInstanceState.getInt(STATE_POSITION);
+            initPosition = savedInstanceState.getInt(STATE_POSITION);
         }
 
-        ImageDetailAdapter imageDetailAdapter = new ImageDetailAdapter(getSupportFragmentManager(), urls);
-        viewPager.setAdapter(imageDetailAdapter);
-        CharSequence text = getString(R.string.viewpager_indicator, pagerPosition + 1, urls.size());
+        CharSequence text = getString(R.string.image_preview_viewpager_indicator, initPosition + 1, urls.size());
         textIndicator.setText(text);
+        FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                return ImageDetailFragment.newInstance(urls.get(position), initPosition, position);
+            }
+
+            @Override
+            public int getCount() {
+                return urls.size();
+            }
+        };
+        viewPager.setAdapter(adapter);
         // 更新下标
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
@@ -87,11 +123,41 @@ public class ImagePreViewActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int arg0) {
-                CharSequence text = getString(R.string.viewpager_indicator, arg0 + 1, viewPager.getAdapter().getCount());
+                CharSequence text = getString(R.string.image_preview_viewpager_indicator, arg0 + 1, viewPager.getAdapter().getCount());
                 textIndicator.setText(text);
             }
         });
+        viewPager.setCurrentItem(initPosition);
+    }
 
-        viewPager.setCurrentItem(pagerPosition);
+    @Override
+    public void finishAfterTransition() {
+        int pos = viewPager.getCurrentItem();
+        Intent intent = new Intent();
+        intent.putExtra(EXIT_POSITION, pos);
+        setResult(RESULT_OK, intent);
+        if (initPosition != pos) {
+            View view = viewPager.findViewWithTag(getString(R.string.image_preview_transition_name, pos));
+            setSharedElementCallback(view);
+        }
+        super.finishAfterTransition();
+    }
+
+    @TargetApi(21)
+    private void setSharedElementCallback(final View view) {
+        setEnterSharedElementCallback(new SharedElementCallback() {
+            @Override
+            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+                names.clear();
+                sharedElements.clear();
+                names.add(view.getTransitionName());
+                sharedElements.put(view.getTransitionName(), view);
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        supportFinishAfterTransition();
     }
 }

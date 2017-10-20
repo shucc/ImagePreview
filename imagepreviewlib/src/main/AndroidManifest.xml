@@ -10,7 +10,7 @@
         <activity
             android:name=".ImagePreViewActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/TranslucentTheme"/>
+            android:theme="@style/ImagePreview_TranslucentTheme"/>
 
     </application>
 

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="TranslucentTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="ImagePreview_AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowSharedElementEnterTransition">@transition/change_image_transform</item>
+        <item name="android:windowSharedElementExitTransition">@transition/change_image_transform</item>
+    </style>
+    <style name="ImagePreview_TranslucentTheme" parent="ImagePreview_AppTheme">
         <item name="android:windowBackground">@color/transparent</item>
         <item name="android:windowContentTransitions">true</item>
     </style>

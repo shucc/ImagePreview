@@ -1,11 +1,14 @@
 package org.cchao.imagepreviewlib;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -17,14 +20,22 @@ import uk.co.senab.photoview.PhotoViewAttacher;
 public class ImageDetailFragment extends Fragment {
 
     private static final String KEY_URL = "key_url";
+    private static final String KEY_INIT_POSITION = "key_init_position";
+    private static final String KEY_NOW_POSITION = "key_now_position";
 
     private PhotoView photoView;
 
     private String imageUrl;
 
-    public static ImageDetailFragment newInstance(String imageUrl) {
+    private int initPostion;
+
+    private int nowPosition;
+
+    public static ImageDetailFragment newInstance(String imageUrl, int initPostion, int nowPosition) {
         Bundle args = new Bundle();
         args.putString(KEY_URL, imageUrl);
+        args.putInt(KEY_INIT_POSITION, initPostion);
+        args.putInt(KEY_NOW_POSITION, nowPosition);
         ImageDetailFragment fragment = new ImageDetailFragment();
         fragment.setArguments(args);
         return fragment;
@@ -33,19 +44,23 @@ public class ImageDetailFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        imageUrl = getArguments().getString(KEY_URL);
-
-        View rootView = inflater.inflate(R.layout.fragment_image_detail, null);
+        Bundle bundle = getArguments();
+        imageUrl = bundle.getString(KEY_URL);
+        initPostion = bundle.getInt(KEY_INIT_POSITION);
+        nowPosition = bundle.getInt(KEY_NOW_POSITION);
+        View rootView = inflater.inflate(R.layout.fragment_image_preview_detail, null);
         photoView = (PhotoView) rootView.findViewById(R.id.img_detail);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            String name = getString(R.string.image_preview_transition_name, nowPosition);
+            photoView.setTransitionName(name);
+        }
         photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
             public void onPhotoTap(View view, float x, float y) {
                 if (photoView.getScale() > 1.0f) {
                     photoView.setScale(1.0f, true);
                 } else {
-                    getActivity().finish();
+                    getActivity().supportFinishAfterTransition();
                 }
             }
 
@@ -62,8 +77,27 @@ public class ImageDetailFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if (null != ImageLoader.getImageLoaderListener()) {
             ImageLoader.getImageLoaderListener().load(this, photoView, imageUrl);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                photoView.setTag(getString(R.string.image_preview_transition_name, nowPosition));
+                if (nowPosition == initPostion) {
+                    setStartPostTransition(photoView);
+                }
+            }
         } else {
             throw new NullPointerException("ImageLoader not initialized!");
         }
+    }
+
+    @TargetApi(21)
+    private void setStartPostTransition(final View sharedView) {
+        sharedView.getViewTreeObserver().addOnPreDrawListener(
+                new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        sharedView.getViewTreeObserver().removeOnPreDrawListener(this);
+                        getActivity().startPostponedEnterTransition();
+                        return false;
+                    }
+                });
     }
 }
