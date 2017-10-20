@@ -38,7 +38,6 @@ public class ImagePreViewActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_IMAGE_INDEX, pagerPosition);
         intent.putStringArrayListExtra(EXTRA_IMAGE_URLS, urls);
         context.startActivity(intent);
-        context.overridePendingTransition(R.anim.image_preview_enter, R.anim.image_preview_exit);
     }
 
     @Override
@@ -51,7 +50,7 @@ public class ImagePreViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_preview);
 
-         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
@@ -73,16 +72,18 @@ public class ImagePreViewActivity extends AppCompatActivity {
 
         ImageDetailAdapter imageDetailAdapter = new ImageDetailAdapter(getSupportFragmentManager(), urls);
         viewPager.setAdapter(imageDetailAdapter);
-        CharSequence text = getString(R.string.viewpager_indicator, 1, viewPager.getAdapter().getCount());
+        CharSequence text = getString(R.string.viewpager_indicator, pagerPosition + 1, urls.size());
         textIndicator.setText(text);
         // 更新下标
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
-            public void onPageScrollStateChanged(int arg0) {}
+            public void onPageScrollStateChanged(int arg0) {
+            }
 
             @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {}
+            public void onPageScrolled(int arg0, float arg1, int arg2) {
+            }
 
             @Override
             public void onPageSelected(int arg0) {
@@ -92,11 +93,5 @@ public class ImagePreViewActivity extends AppCompatActivity {
         });
 
         viewPager.setCurrentItem(pagerPosition);
-    }
-
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.image_preview_enter, R.anim.image_preview_exit);
     }
 }
