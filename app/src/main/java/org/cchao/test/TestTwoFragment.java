@@ -29,9 +29,6 @@ public class TestTwoFragment extends Fragment {
 
     private List<String> data;
 
-    private int enterPosition;
-    private int exitPosition;
-
     public static TestTwoFragment newInstance() {
         Bundle args = new Bundle();
         TestTwoFragment fragment = new TestTwoFragment();
