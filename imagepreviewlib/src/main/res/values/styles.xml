@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="ImagePreview_AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    </style>
-    <style name="ImagePreview_TranslucentTheme" parent="ImagePreview_AppTheme">
+    <style name="ImagePreview_TranslucentTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@color/transparent</item>
     </style>
 </resources>

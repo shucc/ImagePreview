@@ -9,7 +9,7 @@ import android.view.MotionEvent;
  * Created by shucc on 17/2/24.
  * cc@cchao.org
  */
-public class HackyViewPager extends ViewPager {
+class HackyViewPager extends ViewPager {
 
     public HackyViewPager(Context context) {
         super(context);

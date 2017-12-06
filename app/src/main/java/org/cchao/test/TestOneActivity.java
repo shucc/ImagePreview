@@ -1,31 +1,19 @@
 package org.cchao.test;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.SharedElementCallback;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
-
-import org.cchao.imagepreviewlib.ImageLoader;
-import org.cchao.imagepreviewlib.ImageLoaderListener;
-import org.cchao.imagepreviewlib.ImagePreViewActivity;
+import org.cchao.imagepreviewlib.ImagePreviewBuilder;
+import org.cchao.imagepreviewlib.ImagePreviewExitListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
-import uk.co.senab.photoview.PhotoView;
 
 /**
  * Created by shucc on 17/10/23.
@@ -39,9 +27,6 @@ public class TestOneActivity extends AppCompatActivity {
 
     private List<String> data;
 
-    private int enterPosition;
-    private int exitPosition;
-
     public static void launch(Context context) {
         Intent starter = new Intent(context, TestOneActivity.class);
         context.startActivity(starter);
@@ -52,16 +37,7 @@ public class TestOneActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_one);
 
-        rvImage = (RecyclerView) findViewById(R.id.rv_image);
-
-        ImageLoader.init(new ImageLoaderListener() {
-            @Override
-            public void load(Fragment fragment, PhotoView photoView, String imageUrl) {
-                Glide.with(fragment)
-                        .load(imageUrl)
-                        .into(photoView);
-            }
-        });
+        rvImage = findViewById(R.id.rv_image);
 
         data = new ArrayList<>();
         data.add("http://img3.duitang.com/uploads/item/201606/04/20160604010014_Art48.thumb.224_0.jpeg");
@@ -78,43 +54,18 @@ public class TestOneActivity extends AppCompatActivity {
         imageAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    Pair<View, String> pair = Pair.create(view, view.getTransitionName());
-                    ImagePreViewActivity.launch(TestOneActivity.this, position, (ArrayList) data, pair);
-                    enterPosition = position;
-                    setSharedElementCallback();
-                } else {
-                    ImagePreViewActivity.launch(TestOneActivity.this, position, (ArrayList) data);
-                }
+                ImagePreviewBuilder.from(TestOneActivity.this)
+                        .setInitPosition(position)
+                        .setImageUrlArray(data)
+                        .setPairView(view)
+                        .setImagePreviewExitListener(new ImagePreviewExitListener() {
+                            @Override
+                            public View exitView(int exitPosition) {
+                                return rvImage.findViewWithTag(exitPosition);
+                            }
+                        })
+                        .startActivity();
             }
         });
-    }
-
-    @TargetApi(21)
-    private void setSharedElementCallback() {
-        setExitSharedElementCallback(new SharedElementCallback() {
-            @Override
-            public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                Log.d(TAG, "onMapSharedElements: ");
-                if (exitPosition != enterPosition) {
-                    View view = rvImage.findViewWithTag(exitPosition);
-                    names.clear();
-                    sharedElements.clear();
-                    names.add(view.getTransitionName());
-                    sharedElements.put(view.getTransitionName(), view);
-                }
-                setExitSharedElementCallback((SharedElementCallback) null);
-            }
-        });
-    }
-
-    @Override
-    public void onActivityReenter(int resultCode, Intent data) {
-        Log.d(TAG, "onActivityReenter: ");
-        super.onActivityReenter(resultCode, data);
-        if (resultCode == RESULT_OK && null != data) {
-            exitPosition = data.getIntExtra(ImagePreViewActivity.EXIT_POSITION, 0);
-            Log.d(TAG, "onActivityResult: " + exitPosition);
-        }
     }
 }

@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,43 +29,30 @@ import java.util.Map;
  * Created by shucc on 17/2/23.
  * cc@cchao.org
  */
-public class ImagePreViewActivity extends AppCompatActivity {
+public class ImagePreviewActivity extends AppCompatActivity {
 
-    private static final String STATE_POSITION = "STATE_POSITION";
-    private static final String EXTRA_IMAGE_INDEX = "image_index";
-    private static final String EXTRA_IMAGE_URLS = "image_urls";
-    public static final String EXIT_POSITION = "exit_position";
+    protected static final String EXTRA_IMAGE_SAVE_STATE = "image_init_position";
+    protected static final String EXTRA_IMAGE_INDEX = "image_index";
+    protected static final String EXTRA_IMAGE_TAG = "image_tag";
+    protected static final String EXTRA_IMAGE_URLS = "image_urls";
 
     private HackyViewPager viewPager;
+
     private TextView textIndicator;
+
+    private ProgressBar pbLoading;
+
+    private String tag;
 
     //第几张图片
     private int initPosition;
     //图片地址
     private ArrayList<String> urls = new ArrayList<>();
 
-    public static void launch(Activity context, int initPosition, ArrayList<String> urls) {
-        Intent intent = new Intent(context, ImagePreViewActivity.class);
-        intent.putExtra(EXTRA_IMAGE_INDEX, initPosition);
-        intent.putStringArrayListExtra(EXTRA_IMAGE_URLS, urls);
-        context.startActivity(intent);
-    }
-
-    public static void launch(Activity context, int initPosition, ArrayList<String> urls, Pair<View, String> pair) {
-        Intent intent = new Intent(context, ImagePreViewActivity.class);
-        intent.putExtra(EXTRA_IMAGE_INDEX, initPosition);
-        intent.putStringArrayListExtra(EXTRA_IMAGE_URLS, urls);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(context, pair);
-            context.startActivityForResult(intent, 0, optionsCompat.toBundle());
-        } else {
-            context.startActivity(intent);
-        }
-    }
-
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putInt(STATE_POSITION, viewPager.getCurrentItem());
+        outState.putInt(EXTRA_IMAGE_SAVE_STATE, viewPager.getCurrentItem());
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -86,22 +74,23 @@ public class ImagePreViewActivity extends AppCompatActivity {
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         }
 
-        viewPager = (HackyViewPager) findViewById(R.id.viewPager);
-        textIndicator = (TextView) findViewById(R.id.text_indicator);
+        viewPager = findViewById(R.id.viewPager);
+        textIndicator = findViewById(R.id.text_indicator);
+        pbLoading = findViewById(R.id.pb_loading);
 
         final Intent intent = getIntent();
         initPosition = intent.getIntExtra(EXTRA_IMAGE_INDEX, 0);
+        tag = intent.getStringExtra(EXTRA_IMAGE_TAG);
         urls = intent.getStringArrayListExtra(EXTRA_IMAGE_URLS);
         if (savedInstanceState != null) {
-            initPosition = savedInstanceState.getInt(STATE_POSITION);
+            initPosition = savedInstanceState.getInt(EXTRA_IMAGE_SAVE_STATE);
         }
-
         CharSequence text = getString(R.string.image_preview_viewpager_indicator, initPosition + 1, urls.size());
         textIndicator.setText(text);
         FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
-                return ImageDetailFragment.newInstance(urls.get(position), initPosition, position);
+                return ImageDetailFragment.newInstance(urls.get(position), tag, initPosition, position);
             }
 
             @Override
@@ -133,9 +122,7 @@ public class ImagePreViewActivity extends AppCompatActivity {
     @Override
     public void finishAfterTransition() {
         int pos = viewPager.getCurrentItem();
-        Intent intent = new Intent();
-        intent.putExtra(EXIT_POSITION, pos);
-        setResult(RESULT_OK, intent);
+        ImagePreviewBuilder.setExitPosition(pos);
         if (initPosition != pos) {
             View view = viewPager.findViewWithTag(getString(R.string.image_preview_transition_name, pos));
             setSharedElementCallback(view);
@@ -154,6 +141,10 @@ public class ImagePreViewActivity extends AppCompatActivity {
                 sharedElements.put(view.getTransitionName(), view);
             }
         });
+    }
+
+    public void hideLoading() {
+        pbLoading.setVisibility(View.GONE);
     }
 
     @Override

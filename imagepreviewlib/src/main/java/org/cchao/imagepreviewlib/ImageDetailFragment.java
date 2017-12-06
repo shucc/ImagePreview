@@ -1,14 +1,21 @@
 package org.cchao.imagepreviewlib;
 
 import android.annotation.TargetApi;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -19,22 +26,28 @@ import uk.co.senab.photoview.PhotoViewAttacher;
  */
 public class ImageDetailFragment extends Fragment {
 
+    private final String TAG = getClass().getName();
+
     private static final String KEY_URL = "key_url";
     private static final String KEY_INIT_POSITION = "key_init_position";
     private static final String KEY_NOW_POSITION = "key_now_position";
+    private static final String KEY_IMAGE_TAG = "key_tag";
 
     private PhotoView photoView;
 
     private String imageUrl;
 
-    private int initPostion;
+    private int initPosition;
 
     private int nowPosition;
 
-    public static ImageDetailFragment newInstance(String imageUrl, int initPostion, int nowPosition) {
+    private ImagePreviewActivity imagePreViewActivity;
+
+    public static ImageDetailFragment newInstance(String imageUrl, String tag, int initPosition, int nowPosition) {
         Bundle args = new Bundle();
         args.putString(KEY_URL, imageUrl);
-        args.putInt(KEY_INIT_POSITION, initPostion);
+        args.putString(KEY_IMAGE_TAG, tag);
+        args.putInt(KEY_INIT_POSITION, initPosition);
         args.putInt(KEY_NOW_POSITION, nowPosition);
         ImageDetailFragment fragment = new ImageDetailFragment();
         fragment.setArguments(args);
@@ -46,13 +59,14 @@ public class ImageDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle bundle = getArguments();
         imageUrl = bundle.getString(KEY_URL);
-        initPostion = bundle.getInt(KEY_INIT_POSITION);
+        String tag = bundle.getString(KEY_IMAGE_TAG);
+        initPosition = bundle.getInt(KEY_INIT_POSITION);
         nowPosition = bundle.getInt(KEY_NOW_POSITION);
         View rootView = inflater.inflate(R.layout.fragment_image_preview_detail, null);
-        photoView = (PhotoView) rootView.findViewById(R.id.img_detail);
+        photoView = rootView.findViewById(R.id.img_detail);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String name = getString(R.string.image_preview_transition_name, nowPosition);
-            photoView.setTransitionName(name);
+            photoView.setTransitionName(name.concat(TextUtils.isEmpty(tag) ? "" : tag));
         }
         photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
             @Override
@@ -75,17 +89,31 @@ public class ImageDetailFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (null != ImageLoader.getImageLoaderListener()) {
-            ImageLoader.getImageLoaderListener().load(this, photoView, imageUrl);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                photoView.setTag(getString(R.string.image_preview_transition_name, nowPosition));
-                if (nowPosition == initPostion) {
-                    setStartPostTransition(photoView);
-                }
-            }
-        } else {
-            throw new NullPointerException("ImageLoader not initialized!");
-        }
+        imagePreViewActivity = (ImagePreviewActivity) getActivity();
+        Glide.with(this)
+                .load(imageUrl)
+                .into(new SimpleTarget<GlideDrawable>() {
+
+                    @Override
+                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        super.onLoadFailed(e, errorDrawable);
+                        if (initPosition == nowPosition) {
+                            imagePreViewActivity.finish();
+                        }
+                    }
+
+                    @Override
+                    public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                        imagePreViewActivity.hideLoading();
+                        photoView.setImageDrawable(resource.getCurrent());
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            photoView.setTag(getString(R.string.image_preview_transition_name, nowPosition));
+                            if (nowPosition == initPosition) {
+                                setStartPostTransition(photoView);
+                            }
+                        }
+                    }
+                });
     }
 
     @TargetApi(21)

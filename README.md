@@ -20,9 +20,9 @@ allprojects {
 在使用库的module中添加,为避免重复引用appcompat-v7包,推荐使用exclude:
 ```groovy
 dependencies {
-    compile "com.android.support:appcompat-v7:latest.release.version"
-    compile "com.github.chrisbanes:PhotoView:latest.release.version"
-    compile ('com.github.shucc:ImagePreview:v1.2') {
+    implementation "com.android.support:appcompat-v7:latest.release.version"
+    implementation "com.github.chrisbanes:PhotoView:latest.release.version"
+    implementation ('com.github.shucc:ImagePreview:v2.0') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.github.chrisbanes', module: 'PhotoView'
     }
@@ -30,28 +30,18 @@ dependencies {
 ```
 
 ## 使用
-
-初始化图片加载,推荐放在Application中:
-```java
-ImageLoader.init(new ImageLoaderListener() {
-    @Override
-    public void load(Context context, PhotoView photoView, String imageUrl) {
-        Glide.with(context)
-                .load(imageUrl)
-                .error(R.mipmap.ic_launcher)
-                .placeholder(R.mipmap.ic_launcher)
-                .into(photoView);
-    }
-});
-```
 打开预览界面:
 ```java
-if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-    Pair<View, String> pair = Pair.create(view, view.getTransitionName());
-    ImagePreViewActivity.launch(MainActivity.this, position, (ArrayList) data, pair);
-    enterPosition = position;
-    setSharedElementCallback();
-} else {
-    ImagePreViewActivity.launch(MainActivity.this, position, (ArrayList) data);
-}
+ImagePreviewBuilder.from(TestOneActivity.this)
+        .setInitPosition(position)
+        .setImageUrlArray(data)
+        .setPairView(view)
+        .setImagePreviewExitListener(new ImagePreviewExitListener() {
+            @Override
+            public View exitView(int exitPosition) {
+                //根据关闭预览界面时的position计算缩小的view，一般使用tag标示计算
+                return rvImage.findViewWithTag(exitPosition);
+            }
+        })
+        .startActivity();
 ```
