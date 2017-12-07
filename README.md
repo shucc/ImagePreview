@@ -22,7 +22,7 @@ allprojects {
 dependencies {
     implementation "com.android.support:appcompat-v7:latest.release.version"
     implementation "com.github.chrisbanes:PhotoView:latest.release.version"
-    implementation ('com.github.shucc:ImagePreview:v1.3') {
+    implementation ('com.github.shucc:ImagePreview:v1.4') {
         exclude group: 'com.android.support', module: 'appcompat-v7'
         exclude group: 'com.github.chrisbanes', module: 'PhotoView'
     }
