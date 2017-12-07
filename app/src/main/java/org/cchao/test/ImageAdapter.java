@@ -24,8 +24,15 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
 
     private OnItemClickListener onItemClickListener;
 
+    private String tag = "";
+
     public ImageAdapter(List<String> data) {
         this.data = data;
+    }
+
+    public ImageAdapter(List<String> data, String tag) {
+        this.data = data;
+        this.tag = tag;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -54,7 +61,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
                 .load(data.get(position))
                 .into(holder.imgDetail);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            holder.imgDetail.setTransitionName(context.getString(R.string.image_preview_transition_name, position));
+            holder.imgDetail.setTransitionName(context.getString(R.string.image_preview_transition_name, position).concat(tag));
             holder.imgDetail.setTag(position);
         }
     }

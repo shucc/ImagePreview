@@ -69,3 +69,6 @@ ImagePreviewBuilder.from(TestOneActivity.this)
         })
         .startActivity();
 ```
+
+## Demo
+![](https://raw.githubusercontent.com/shucc/ImagePreview/master/demo/demo.gif)

@@ -13,7 +13,7 @@
         android:layout_height="48dp"
         android:background="@android:color/black"
         android:gravity="center"
-        android:text="Activity recyclerView to image preview"
+        android:text="从Activity到预览界面"
         android:textColor="@android:color/white"
         android:textSize="18sp" />
 
@@ -24,7 +24,18 @@
         android:background="@android:color/black"
         android:layout_marginTop="16dp"
         android:gravity="center"
-        android:text="Fragment recyclerView to image preview"
+        android:text="从Fragment到预览界面"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/text_three"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@android:color/black"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="从列表的列表到预览界面"
         android:textColor="@android:color/white"
         android:textSize="18sp" />
 

@@ -14,15 +14,20 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.text_one).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TestOneActivity.launch(MainActivity.this);
+                ActivityToPreviewActivity.launch(MainActivity.this);
             }
         });
         findViewById(R.id.text_two).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TestTwoActivity.launch(MainActivity.this);
+                FragmentToPreviewActivity.launch(MainActivity.this);
+            }
+        });
+        findViewById(R.id.text_three).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                RecyclerViewToPreviewActivity.launch(MainActivity.this);
             }
         });
     }
-
 }

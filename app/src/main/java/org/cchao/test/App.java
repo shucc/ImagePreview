@@ -34,6 +34,11 @@ public class App extends Application {
                         .into(new SimpleTarget<GlideDrawable>() {
 
                             @Override
+                            public void onLoadStarted(Drawable placeholder) {
+                                super.onLoadStarted(placeholder);
+                            }
+
+                            @Override
                             public void onLoadFailed(Exception e, Drawable errorDrawable) {
                                 super.onLoadFailed(e, errorDrawable);
                                 imagePreviewLoadTarget.onLoadFailure();
