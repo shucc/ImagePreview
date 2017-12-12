@@ -2,6 +2,9 @@
 
 多图预览,共享元素的使用参考自[SETransitionDemo](https://github.com/mingdroid/SETransitionDemo),ImagePreviewLoad的配置以及ImagePreviewBuilder控制跳转参考自[ZoomPreviewPicture](https://github.com/yangchaojiang/ZoomPreviewPicture)
 
+# 兼容性
+共享元素动画效果需要5.0+
+
 ## 第三方包
 [PhotoView](https://github.com/chrisbanes/PhotoView)
 

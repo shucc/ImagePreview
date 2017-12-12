@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ProgressBar;
 
 import uk.co.senab.photoview.PhotoView;
 import uk.co.senab.photoview.PhotoViewAttacher;
@@ -28,6 +29,7 @@ public class ImageDetailFragment extends Fragment {
     private static final String KEY_IMAGE_TAG = "key_tag";
 
     private PhotoView photoView;
+    private ProgressBar progressBar;
 
     private String imageUrl;
 
@@ -58,6 +60,7 @@ public class ImageDetailFragment extends Fragment {
         nowPosition = bundle.getInt(KEY_NOW_POSITION);
         View rootView = inflater.inflate(R.layout.fragment_image_preview_detail, null);
         photoView = rootView.findViewById(R.id.img_detail);
+        progressBar = rootView.findViewById(R.id.pb_loading);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             String name = getString(R.string.image_preview_transition_name, nowPosition);
             photoView.setTransitionName(name.concat(TextUtils.isEmpty(tag) ? "" : tag));
@@ -87,6 +90,7 @@ public class ImageDetailFragment extends Fragment {
         ImagePreviewLoad.getImagePreviewLoadListener().load(this, imageUrl, new ImagePreviewLoadTarget(photoView) {
             @Override
             public void onLoadFailure() {
+                progressBar.setVisibility(View.GONE);
                 if (initPosition == nowPosition) {
                     imagePreViewActivity.finish();
                 }
@@ -94,7 +98,7 @@ public class ImageDetailFragment extends Fragment {
 
             @Override
             public void onLoadSuccess() {
-                imagePreViewActivity.hideLoading();
+                progressBar.setVisibility(View.GONE);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     photoView.setTag(getString(R.string.image_preview_transition_name, nowPosition));
                     if (nowPosition == initPosition) {

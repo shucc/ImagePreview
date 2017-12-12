@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -28,6 +27,8 @@ import java.util.Map;
  */
 public class ImagePreviewActivity extends AppCompatActivity {
 
+    private final String TAG = getClass().getName();
+
     protected static final String EXTRA_IMAGE_SAVE_STATE = "image_init_position";
     protected static final String EXTRA_IMAGE_INDEX = "image_index";
     protected static final String EXTRA_IMAGE_TAG = "image_tag";
@@ -36,8 +37,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
     private HackyViewPager viewPager;
 
     private TextView textIndicator;
-
-    private ProgressBar pbLoading;
 
     private String tag;
 
@@ -55,10 +54,10 @@ public class ImagePreviewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_image_preview);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ActivityCompat.postponeEnterTransition(this);
         }
-        setContentView(R.layout.activity_image_preview);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -73,7 +72,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.viewPager);
         textIndicator = findViewById(R.id.text_indicator);
-        pbLoading = findViewById(R.id.pb_loading);
 
         final Intent intent = getIntent();
         initPosition = intent.getIntExtra(EXTRA_IMAGE_INDEX, 0);
@@ -138,10 +136,6 @@ public class ImagePreviewActivity extends AppCompatActivity {
                 sharedElements.put(view.getTransitionName(), view);
             }
         });
-    }
-
-    public void hideLoading() {
-        pbLoading.setVisibility(View.GONE);
     }
 
     @Override
