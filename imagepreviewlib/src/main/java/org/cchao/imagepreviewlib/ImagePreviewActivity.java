@@ -107,6 +107,9 @@ public class ImagePreviewActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int arg0) {
+                if (null != ImagePreviewBuilder.getImagePreviewSelectListener()) {
+                    ImagePreviewBuilder.getImagePreviewSelectListener().onPageSelect(arg0);
+                }
                 CharSequence text = getString(R.string.image_preview_viewpager_indicator, arg0 + 1, viewPager.getAdapter().getCount());
                 textIndicator.setText(text);
             }

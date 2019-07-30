@@ -33,6 +33,8 @@ public class ImagePreviewBuilder {
 
     private ImagePreviewExitListener imagePreviewExitListener;
 
+    private static ImagePreviewSelectListener imagePreviewSelectListener;
+
     private static int exitPosition;
 
     private ImagePreviewBuilder(AppCompatActivity activity) {
@@ -76,6 +78,11 @@ public class ImagePreviewBuilder {
         return this;
     }
 
+    public ImagePreviewBuilder setImagePreviewSelectListener(@NonNull ImagePreviewSelectListener imagePreviewSelectListener) {
+        this.imagePreviewSelectListener = imagePreviewSelectListener;
+        return this;
+    }
+
     public void startActivity() {
         if (null != pair && Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity, pair);
@@ -105,5 +112,9 @@ public class ImagePreviewBuilder {
 
     protected static void setExitPosition(int exitPosition) {
         ImagePreviewBuilder.exitPosition = exitPosition;
+    }
+
+    protected static ImagePreviewSelectListener getImagePreviewSelectListener() {
+        return imagePreviewSelectListener;
     }
 }

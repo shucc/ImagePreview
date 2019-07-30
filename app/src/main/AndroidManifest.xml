@@ -23,6 +23,7 @@
         <activity android:name=".ActivityToPreviewActivity" />
         <activity android:name=".FragmentToPreviewActivity" />
         <activity android:name=".RecyclerViewToPreviewActivity" />
+        <activity android:name=".ViewPagerActivity" />
     </application>
 
 </manifest>

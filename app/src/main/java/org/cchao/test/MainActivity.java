@@ -29,5 +29,11 @@ public class MainActivity extends AppCompatActivity {
                 RecyclerViewToPreviewActivity.launch(MainActivity.this);
             }
         });
+        findViewById(R.id.text_four).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ViewPagerActivity.launch(MainActivity.this);
+            }
+        });
     }
 }
