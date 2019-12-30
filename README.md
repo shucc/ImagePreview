@@ -25,7 +25,7 @@ allprojects {
 dependencies {
     implementation "androidx.appcompat:appcompat:latest.release.version"
     implementation "com.github.chrisbanes:PhotoView:2.3.0"
-    implementation ('com.github.shucc:ImagePreview:1.5')
+    implementation 'com.github.shucc:ImagePreview:1.5'
 }
 ```
 
