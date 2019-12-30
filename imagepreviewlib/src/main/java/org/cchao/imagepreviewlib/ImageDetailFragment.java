@@ -3,17 +3,20 @@ package org.cchao.imagepreviewlib;
 import android.annotation.TargetApi;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.github.chrisbanes.photoview.OnPhotoTapListener;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 /**
  * Created by shucc on 17/2/23.
@@ -65,19 +68,14 @@ public class ImageDetailFragment extends Fragment {
             String name = getString(R.string.image_preview_transition_name, nowPosition);
             photoView.setTransitionName(name.concat(TextUtils.isEmpty(tag) ? "" : tag));
         }
-        photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+        photoView.setOnPhotoTapListener(new OnPhotoTapListener() {
             @Override
-            public void onPhotoTap(View view, float x, float y) {
+            public void onPhotoTap(ImageView view, float x, float y) {
                 if (photoView.getScale() > 1.0f) {
                     photoView.setScale(1.0f, true);
                 } else {
                     getActivity().supportFinishAfterTransition();
                 }
-            }
-
-            @Override
-            public void onOutsidePhotoTap() {
-
             }
         });
         return rootView;

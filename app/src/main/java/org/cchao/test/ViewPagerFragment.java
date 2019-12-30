@@ -2,18 +2,15 @@ package org.cchao.test;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-import org.cchao.imagepreviewlib.ImagePreviewBuilder;
-import org.cchao.imagepreviewlib.ImagePreviewExitListener;
+import com.bumptech.glide.Glide;
 
 /**
  * @author cchen6

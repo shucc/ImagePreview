@@ -2,12 +2,14 @@ package org.cchao.test;
 
 import android.app.Application;
 import android.graphics.drawable.Drawable;
-import android.support.v4.app.Fragment;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import org.cchao.imagepreviewlib.ImagePreviewLoad;
 import org.cchao.imagepreviewlib.ImagePreviewLoadListener;
@@ -31,23 +33,17 @@ public class App extends Application {
             public void load(Fragment fragment, String imageUrl, final ImagePreviewLoadTarget imagePreviewLoadTarget) {
                 Glide.with(fragment)
                         .load(imageUrl)
-                        .into(new SimpleTarget<GlideDrawable>() {
-
+                        .into(new SimpleTarget<Drawable>() {
                             @Override
-                            public void onLoadStarted(Drawable placeholder) {
-                                super.onLoadStarted(placeholder);
-                            }
-
-                            @Override
-                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                                super.onLoadFailed(e, errorDrawable);
-                                imagePreviewLoadTarget.onLoadFailure();
-                            }
-
-                            @Override
-                            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                                 imagePreviewLoadTarget.getImageView().setImageDrawable(resource.getCurrent());
                                 imagePreviewLoadTarget.onLoadSuccess();
+                            }
+
+                            @Override
+                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                                super.onLoadFailed(errorDrawable);
+                                imagePreviewLoadTarget.onLoadFailure();
                             }
                         });
             }

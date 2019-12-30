@@ -1,8 +1,9 @@
 package org.cchao.test;
 
 import android.annotation.SuppressLint;
-import android.support.v4.view.ViewPager;
 import android.view.View;
+
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * @author cchen6

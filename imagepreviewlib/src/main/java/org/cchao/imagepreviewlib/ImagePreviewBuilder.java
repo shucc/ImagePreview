@@ -4,12 +4,13 @@ import android.annotation.TargetApi;
 import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.util.Pair;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityOptionsCompat;
+import androidx.core.util.Pair;
+import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +96,7 @@ public class ImagePreviewBuilder {
 
     @TargetApi(21)
     private void setSharedElementCallback() {
-        activity.setExitSharedElementCallback(new android.support.v4.app.SharedElementCallback() {
+        activity.setExitSharedElementCallback(new SharedElementCallback() {
             @Override
             public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
                 if (exitPosition != enterPosition) {

@@ -3,7 +3,7 @@
 多图预览,共享元素的使用参考自[SETransitionDemo](https://github.com/mingdroid/SETransitionDemo),ImagePreviewLoad的配置以及ImagePreviewBuilder控制跳转参考自[ZoomPreviewPicture](https://github.com/yangchaojiang/ZoomPreviewPicture)
 
 # 兼容性
-共享元素动画效果需要5.0+
+共享元素动画效果需要5.0+,适配AndroidX
 
 ## 第三方包
 [PhotoView](https://github.com/chrisbanes/PhotoView)
@@ -23,12 +23,9 @@ allprojects {
 在使用库的module中添加,为避免重复引用appcompat-v7包,推荐使用exclude:
 ```groovy
 dependencies {
-    implementation "com.android.support:appcompat-v7:latest.release.version"
-    implementation "com.github.chrisbanes:PhotoView:latest.release.version"
-    implementation ('com.github.shucc:ImagePreview:v1.4') {
-        exclude group: 'com.android.support', module: 'appcompat-v7'
-        exclude group: 'com.github.chrisbanes', module: 'PhotoView'
-    }
+    implementation "androidx.appcompat:appcompat:latest.release.version"
+    implementation "com.github.chrisbanes:PhotoView:2.3.0"
+    implementation ('com.github.shucc:ImagePreview:1.5')
 }
 ```
 
