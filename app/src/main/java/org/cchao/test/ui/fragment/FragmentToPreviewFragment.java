@@ -1,53 +1,53 @@
-package org.cchao.test;
+package org.cchao.test.ui.fragment;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.cchao.imagepreviewlib.ImagePreviewBuilder;
 import org.cchao.imagepreviewlib.ImagePreviewExitListener;
+import org.cchao.test.Constants;
+import org.cchao.test.R;
+import org.cchao.test.adapter.ImageAdapter;
+import org.cchao.test.listener.OnItemClickListener;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Created by shucc on 17/10/23.
  * cc@cchao.org
  */
-public class ActivityToPreviewActivity extends AppCompatActivity {
-
-    private final String TAG = getClass().getName();
+public class FragmentToPreviewFragment extends Fragment {
 
     private RecyclerView rvImage;
 
     private List<String> data;
 
-    public static void launch(Context context) {
-        Intent starter = new Intent(context, ActivityToPreviewActivity.class);
-        context.startActivity(starter);
+    public static FragmentToPreviewFragment newInstance() {
+        Bundle args = new Bundle();
+        FragmentToPreviewFragment fragment = new FragmentToPreviewFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_one);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_test_two, container, false);
+        rvImage = view.findViewById(R.id.rv_image);
 
-        rvImage = findViewById(R.id.rv_image);
+        data = Constants.TEMP_IMAGES;
 
-        data = new ArrayList<>();
-        data.add("http://img3.duitang.com/uploads/item/201606/04/20160604010014_Art48.thumb.224_0.jpeg");
-        data.add("http://imgsrc.baidu.com/forum/w=580/sign=a3d6766038292df597c3ac1d8c305ce2/20e941c2d5628535d2e5616e92ef76c6a6ef63b5.jpg");
-        data.add("http://imgsrc.baidu.com/forum/w%3D580/sign=ba6c1291f21f3a295ac8d5c6a924bce3/028195504fc2d562b30d63a2e51190ef77c66cb5.jpg");
-        data.add("http://pic1.ipadown.com/imgs/20110326172546834.jpg");
-        data.add("http://n.sinaimg.cn/97973/transform/20160115/5AgV-fxnqrkc6483530.jpg");
-
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         rvImage.setLayoutManager(gridLayoutManager);
         ImageAdapter imageAdapter = new ImageAdapter(data);
@@ -55,7 +55,7 @@ public class ActivityToPreviewActivity extends AppCompatActivity {
         imageAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                ImagePreviewBuilder.from(ActivityToPreviewActivity.this)
+                ImagePreviewBuilder.from((AppCompatActivity) getActivity())
                         .setInitPosition(position)
                         .setImageUrlArray(data)
                         .setPairView(view)
@@ -68,5 +68,6 @@ public class ActivityToPreviewActivity extends AppCompatActivity {
                         .startActivity();
             }
         });
+        return view;
     }
 }

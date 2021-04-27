@@ -1,4 +1,4 @@
-package org.cchao.test;
+package org.cchao.test.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +14,12 @@ import androidx.viewpager.widget.ViewPager;
 import org.cchao.imagepreviewlib.ImagePreviewBuilder;
 import org.cchao.imagepreviewlib.ImagePreviewExitListener;
 import org.cchao.imagepreviewlib.ImagePreviewSelectListener;
+import org.cchao.test.Constants;
+import org.cchao.test.R;
+import org.cchao.test.ui.fragment.ViewPagerFragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,10 +42,7 @@ public class ViewPagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_viewpager);
         vpData = findViewById(R.id.vp_data);
 
-        final List<String> data = new ArrayList<>();
-        data.add("http://imgsrc.baidu.com/forum/w=580/sign=a3d6766038292df597c3ac1d8c305ce2/20e941c2d5628535d2e5616e92ef76c6a6ef63b5.jpg");
-        data.add("http://imgsrc.baidu.com/forum/w%3D580/sign=ba6c1291f21f3a295ac8d5c6a924bce3/028195504fc2d562b30d63a2e51190ef77c66cb5.jpg");
-        data.add("http://n.sinaimg.cn/97973/transform/20160115/5AgV-fxnqrkc6483530.jpg");
+        final List<String> data = Constants.TEMP_IMAGES;
         final List<ViewPagerFragment> fragmentList = new ArrayList<>();
         vpData.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override

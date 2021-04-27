@@ -1,4 +1,4 @@
-package org.cchao.test;
+package org.cchao.test.ui.fragment;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+
+import org.cchao.test.R;
 
 /**
  * @author cchen6
@@ -61,7 +63,7 @@ public class ViewPagerFragment extends Fragment {
         this.onExitListener = onExitListener;
     }
 
-    interface OnExitListener {
+    public interface OnExitListener {
         void onExit(View view, int position);
     }
 }

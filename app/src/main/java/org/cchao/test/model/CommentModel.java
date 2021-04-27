@@ -1,4 +1,4 @@
-package org.cchao.test;
+package org.cchao.test.model;
 
 import java.util.List;
 

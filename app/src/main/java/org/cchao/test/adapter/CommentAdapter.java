@@ -1,4 +1,4 @@
-package org.cchao.test;
+package org.cchao.test.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.cchao.imagepreviewlib.ImagePreviewBuilder;
 import org.cchao.imagepreviewlib.ImagePreviewExitListener;
+import org.cchao.test.model.CommentModel;
+import org.cchao.test.listener.OnItemClickListener;
+import org.cchao.test.R;
 
 import java.util.List;
 

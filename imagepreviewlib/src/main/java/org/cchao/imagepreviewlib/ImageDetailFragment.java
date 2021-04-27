@@ -16,15 +16,12 @@ import androidx.fragment.app.Fragment;
 
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
 /**
  * Created by shucc on 17/2/23.
  * cc@cchao.org
  */
 public class ImageDetailFragment extends Fragment {
-
-    private final String TAG = getClass().getName();
 
     private static final String KEY_URL = "key_url";
     private static final String KEY_INIT_POSITION = "key_init_position";

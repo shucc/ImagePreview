@@ -1,9 +1,12 @@
-package org.cchao.test;
+package org.cchao.test.ui.activity;
 
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.cchao.test.R;
+import org.cchao.test.ui.dialog.DialogFragmentToPreviewDialog;
 
 public class MainActivity extends AppCompatActivity {
 

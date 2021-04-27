@@ -1,4 +1,4 @@
-package org.cchao.test;
+package org.cchao.test.adapter;
 
 import android.content.Context;
 import android.os.Build;
@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 
 import org.cchao.imagepreviewlib.ImagePreviewBuilder;
 import org.cchao.imagepreviewlib.ImagePreviewExitListener;
+import org.cchao.test.R;
 
 import java.util.ArrayList;
 import java.util.List;

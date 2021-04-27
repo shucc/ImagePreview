@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.SharedElementCallback;
 import android.content.Intent;
 import android.os.Build;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -21,8 +22,6 @@ import java.util.Map;
  * cc@cchao.org
  */
 public class ImagePreviewBuilder {
-
-    private final String TAG = getClass().getName();
 
     private AppCompatActivity activity;
 
@@ -68,7 +67,7 @@ public class ImagePreviewBuilder {
     }
 
     public ImagePreviewBuilder setPairView(@NonNull View view) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !TextUtils.isEmpty(view.getTransitionName())) {
             this.pair = Pair.create(view, view.getTransitionName());
         }
         return this;

@@ -1,4 +1,4 @@
-package org.cchao.test;
+package org.cchao.test.ui.dialog;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,13 +19,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.cchao.imagepreviewlib.ImagePreviewBuilder;
 import org.cchao.imagepreviewlib.ImagePreviewExitListener;
+import org.cchao.test.Constants;
+import org.cchao.test.R;
+import org.cchao.test.adapter.ImageAdapter;
+import org.cchao.test.listener.OnItemClickListener;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DialogFragmentToPreviewDialog extends DialogFragment {
-
-    private final String TAG = getClass().getName();
 
     private RecyclerView rvImage;
 
@@ -43,7 +45,7 @@ public class DialogFragmentToPreviewDialog extends DialogFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(getContext(), R.layout.fragment_test_two, null);
         rvImage = view.findViewById(R.id.rv_image);
-        getDialog().getWindow().getDecorView().setPadding(0, 0,0,0);
+        getDialog().getWindow().getDecorView().setPadding(0, 0, 0, 0);
         WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().setCanceledOnTouchOutside(true);
@@ -51,12 +53,7 @@ public class DialogFragmentToPreviewDialog extends DialogFragment {
         params.width = ViewGroup.LayoutParams.MATCH_PARENT;
         params.gravity = Gravity.BOTTOM;
         getDialog().getWindow().setAttributes(params);
-        data = new ArrayList<>();
-        data.add("http://img3.duitang.com/uploads/item/201606/04/20160604010014_Art48.thumb.224_0.jpeg");
-        data.add("http://imgsrc.baidu.com/forum/w=580/sign=a3d6766038292df597c3ac1d8c305ce2/20e941c2d5628535d2e5616e92ef76c6a6ef63b5.jpg");
-        data.add("http://imgsrc.baidu.com/forum/w%3D580/sign=ba6c1291f21f3a295ac8d5c6a924bce3/028195504fc2d562b30d63a2e51190ef77c66cb5.jpg");
-        data.add("http://pic1.ipadown.com/imgs/20110326172546834.jpg");
-        data.add("http://n.sinaimg.cn/97973/transform/20160115/5AgV-fxnqrkc6483530.jpg");
+        data = Constants.TEMP_IMAGES;
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
         gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

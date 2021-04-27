@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.SharedElementCallback;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import java.util.ArrayList;
@@ -27,8 +27,6 @@ import java.util.Map;
  * cc@cchao.org
  */
 public class ImagePreviewActivity extends AppCompatActivity {
-
-    private final String TAG = getClass().getName();
 
     protected static final String EXTRA_IMAGE_SAVE_STATE = "image_init_position";
     protected static final String EXTRA_IMAGE_INDEX = "image_index";
@@ -83,7 +81,7 @@ public class ImagePreviewActivity extends AppCompatActivity {
         }
         CharSequence text = getString(R.string.image_preview_viewpager_indicator, initPosition + 1, urls.size());
         textIndicator.setText(text);
-        FragmentPagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+        FragmentStatePagerAdapter adapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
             public Fragment getItem(int position) {
                 return ImageDetailFragment.newInstance(urls.get(position), tag, initPosition, position);

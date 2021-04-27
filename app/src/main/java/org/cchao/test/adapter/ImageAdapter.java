@@ -1,4 +1,4 @@
-package org.cchao.test;
+package org.cchao.test.adapter;
 
 import android.content.Context;
 import android.os.Build;
@@ -10,6 +10,9 @@ import android.widget.ImageView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+
+import org.cchao.test.R;
+import org.cchao.test.listener.OnItemClickListener;
 
 import java.util.List;
 

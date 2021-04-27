@@ -13,11 +13,11 @@
         android:id="@+id/text_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
         android:layout_gravity="bottom"
+        android:background="@android:color/transparent"
         android:gravity="center"
-        android:textSize="18sp"
+        android:text="@string/image_preview_viewpager_indicator"
         android:textColor="@android:color/white"
-        android:text="@string/image_preview_viewpager_indicator" />
+        android:textSize="18sp" />
 
 </FrameLayout>
