@@ -36,5 +36,12 @@ public class MainActivity extends AppCompatActivity {
                 ViewPagerActivity.launch(MainActivity.this);
             }
         });
+        findViewById(R.id.text_five).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragmentToPreviewDialog dialog = DialogFragmentToPreviewDialog.newInstance();
+                dialog.show(getSupportFragmentManager(), "DialogFragmentToPreviewDialog");
+            }
+        });
     }
 }

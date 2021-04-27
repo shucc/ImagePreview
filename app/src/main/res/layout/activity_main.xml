@@ -50,4 +50,14 @@
         android:textColor="@android:color/white"
         android:textSize="18sp" />
 
+    <TextView
+        android:id="@+id/text_five"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@android:color/black"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:text="从DialogFragment到预览界面"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
 </LinearLayout>
